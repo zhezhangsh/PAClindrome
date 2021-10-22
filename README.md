@@ -46,28 +46,28 @@ R CMD INSTALL PAClindrome
 
 The only input to PAClindrome is a .fasta file of PacBio subreads from one or multiple full reads. Format of subread name must follow the PacBio convention ***{movieName}/{holeNumber}/{qStart}_{qEnd}***, such as ***m54215_191216_174243/4260227/0_12388***. An example of the input file can be found at [example/subread-ex.fasta](example/subread-ex.fasta) 
 
-  - **Demo data**: $paclindrome/example/subread-ex.fasta
-  - **Template**: $paclindrome/example/run-palindrome-template.sh; where $paclindrome is where you cloned the PAClindrome repo
-
-Edit the following line in ***run-palindrome-template.sh*** according to your local system.
+To test PAClindrome, locate and edit the [example/run-palindrome-template.sh](example/run-palindrome-template.sh) to specify input file, output directory, locations where the required programs were installed.
 
 ```
-paclindrome=[my-paclindrome-path]
+# Line to edit in the example/run-palindrome-template.sh template file
+paclindrome=[path-to-paclindrome-local clone]
 
-r=[my-path-to-rscript]
-blasr=[my-path-to-blasr]
-muscle=[my-path-to-muscle]
-samtools=[my-path-to-samtools]
+r=[path-to-Rscript]
+blasr=[path-to-blasr]
+muscle=[path-to-muscle]
+samtools=[path-to-samtools]
 
-subread=$paclindrome/example/subread-ex.fasta # change it if using your own data
-output=$paclindrome/example/output # change it if using other output directory
+subread=$paclindrome/example/subread-ex.fasta # $paclindrome is where PAClindrome was cloned to locally
+output=[path-to-output-directory]
 ```
 
-Now, you are ready to go:
+Now, we are ready to go:
 
 ```
 sh run-palindrome-template.sh 
 ```
 
-The test run takes abour 5 minutes on most systems. Check results within the output directory once it's done. 
+The test run takes abour 5 minutes. Result files will be written to the $output directory if it gets a consensus sequence from any reads.
+
+  - 
 
