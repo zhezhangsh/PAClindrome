@@ -49,7 +49,7 @@ The only input to PAClindrome is a .fasta file of PacBio subreads from one or mu
 To test PAClindrome, locate and edit the [example/run-palindrome-template.sh](example/run-palindrome-template.sh) to specify input file, output directory, locations where the required programs were installed.
 
 ```
-# Line to edit in the example/run-palindrome-template.sh template file
+# Lines to edit in the example/run-palindrome-template.sh template file
 paclindrome=[path-to-paclindrome-local clone]
 
 r=[path-to-Rscript]
