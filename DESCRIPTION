@@ -1,11 +1,11 @@
 Package: PAClindrome
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Palindrome subsequences in PacBio long reads
 Version: 0.1.0
-Author: Who wrote it
+Author: Zhe Zhang (zhangz@chop.edu)
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: This package identifies palindrome repeats in PacBio long reads and uses them to obtain consensus sequences with much higher accuracy.
+License: Free
 Encoding: UTF-8
 LazyData: true
+Imports: Biostrings, IRanges 

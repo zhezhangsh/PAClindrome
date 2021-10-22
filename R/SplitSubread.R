@@ -1,10 +1,11 @@
 # This function splits a large number of PacBio subreads in an input fasta file
 # Subreads from the same ZMW full read will be saved in the same output fasta file
-SplitSubread <- function(fsub, output=getwd()) {
+SplitSubread <- function(fsub, output=getwd(), minlen=2000) {
   # fsub    fasta file of subreads; subreads are named with PacBio standard (SMRTcell/ZMWhole/stat_end)
   # output  output paht to save split files
+  # minlen  minimum of effective length for a full read to be considered for palindrome search
 
-  fsbr <- paste0(output, '/subread');  # file to write names of all subreads
+  fsbr <- paste0(output, '/subread.list');  # file to write names of all subreads
   unlink(fsbr); # delete existing files
 
   smrt <- c(); # list of SMRT cells
@@ -39,7 +40,7 @@ SplitSubread <- function(fsub, output=getwd()) {
   # Write subread one by one
   while(length(line) > 0) {
     if (grepl('^>', line)) {
-      sid  <-writeSubread(sub, output, fsbr);
+      sid  <- writeSubread(sub, output, fsbr);
       smrt <- unique(c(smrt, sid[1])); # register new SMRT cell name
       sub  <- line
     } else sub <- c(sub, line);
@@ -49,7 +50,7 @@ SplitSubread <- function(fsub, output=getwd()) {
   # Write the last subread
   sid  <- writeSubread(sub, output, fsbr);
   smrt <- unique(c(smrt, sid[1]));
-  writeLines(smrt, paste0(output, '/smrt'));
+  writeLines(smrt, paste0(output, '/smrt.list'));
 
   try(close(con));
   ####################################################################################
@@ -70,8 +71,13 @@ SplitSubread <- function(fsub, output=getwd()) {
   cnm <- sub('/[0-9]+$', '', names(splt));
   fid <- sub('.+(/)', '', names(splt))
   smm <- data.frame(cell=cnm, read=fid, nsubread=stat[, 1], length=stat[, 3], effective=stat[, 2], stringsAsFactors = FALSE);
-  write.table(smm, paste0(output, '/fullread'), quote = FALSE, sep = '\t', row.names = FALSE, col.names = FALSE);
+  rid <- paste(output, cnm, fid, fid, sep='/');
+  rownames(smm) <- 1:nrow(smm);
+  saveRDS(smm, paste0(output, '/fullread.rds'));
+  writeLines(rid[smm$effective>=minlen], paste0(output, '/fullread.list'));
   ####################################################################################
 
+  
+  
   invisible(smm);
 }

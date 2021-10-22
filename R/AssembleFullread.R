@@ -1,64 +1,47 @@
 ##############################################################################
-# Assemble subreads from the same spot back to original full read
-# Fill the gap with Ns
-AssembleFullread <- function(fraw, output = getwd()) {
-  # fraw    fasta file saving the raw subread sequences from one or multiple ZMW full reads
-  # output  location of output files, one ubdirectory for each movie
-
-  lns <- readLines()
-
-  seq <- read.fasta(fraw, as.string = TRUE, forceDNAtolower = FALSE);
-  ids <- names(seq);
-
-  ids <- sub('^>', '', ids); # Remove the beginning ">" in description line of sequences
-  ids <- sub('^\\s+', '', ids);
-  ids <- sub('\\s+$', '', ids);
-
-  id.field <- strsplit(ids, '/');  # movieName, holeNumber and qStart_qEnd
-  id.movie <- sapply(id.field, function(x) x[1]);
-  id.hole  <- sapply(id.field, function(x) x[2]);
-  stt.end  <- sapply(id.field, function(x) x[3]);
-
-  hole.ind <- data.frame(id.hole, stt.end, stringsAsFactors = FALSE);
-  uid <- unique(id.movie);
-  len <- lapply(uid, function(mid) { # For every movie
-    movie <- hole.ind[id.movie==mid, , drop=FALSE];
-    dir.create(paste0(output, '/', mid), recursive = TRUE, showWarnings = FALSE); # Create subdirectory
-    seq0 <- seq[id.movie==mid];
-
-    # Split by full read ID
-    hole.id   <- movie[, 1]; # full read id
-    start.end <- strsplit(movie[, 2], '_');
-    ind.start <- split(as.integer(sapply(start.end, function(i) i[1])), hole.id);
-    ind.end   <- spli?t(as.integer(sapply(start.end, function(i) i[2])), hole.id);
-    subread   <- split(seq0, hole.id);
-    ind <- cbind(names(subread), ind.start, ind.end, subread);
-
-    # Assemble full reads in the same movie
-    fullread <- sapply(1:nrow(ind), function(i) {
-      hid <- unlist(ind[i, 1]);
-      stt <- unlist(ind[i, 2]);
-      end <- unlist(ind[i, 3]);
-      sub <- unlist(ind[i, 4]);
-
-      # Assemble sequences
-      fullread <- paste(rep('N', max(end)), collapse='');
-      for (j in 1:length(stt)) substr(fullread, stt[j]+1, end[j]) <- sub[j];
-      id <- paste0(mid, '/', hid, '/0_', nchar(fullread));
-      names(fullread) <- id;
-
-      dr <- paste0(output, '/', mid, '/', hid);
-      fn <- paste0(dr, '/', hid, '-fullread.fasta');
-      dir.create(dr, recursive = TRUE, showWarnings = FALSE);
-      writeLines(c(paste0('>', id), fullread), fn);
-
-      fullread;
-    });
-
-    nchar(fullread);
-  });
-  names(len) <- uid;
-
-  invisible(len);
+# Assemble subreads of a full read and save it to a separate file
+AssembleFullread <- function(read, size=400, step=100) {
+  # read      Path and file prefix of the read to be processed; $read-subread.fasta must exist
+  suppressPackageStartupMessages(require(Biostrings));
+  
+  fsub <- paste0(read, '-subread.fasta'); # full list of subread in fasta (output of SplitSubread);
+  
+  ################################################################################################
+  # read in subreads from fasta (not using seqinr::read.fasta to avoid dependence)
+  lns <- readLines(fsub);
+  
+  ind <- grep('^>', lns);
+  fst <- ind + 1;
+  lst <- c(ind[-1] - 1, length(lns));
+  sub <- sapply(1:length(ind), function(i) paste(lns[fst[i]:lst[i]], collapse=''));
+  
+  pos <- sub('>.+(/).+(/)', '', lns[ind]);
+  stt <- 1 + as.integer(sub('_[0-9]+$', '', pos));
+  end <- as.integer(sub('^[0-9]+_', '', pos));
+  fll <- paste(rep('N', length=max(end)), collapse='');
+  
+  for (i in 1:length(pos)) substr(fll, stt[i], end[i]) <- sub[i];
+  rid <- sub('[0-9]+_[0-9]+$', '', lns[ind[1]]);
+  hdr <- paste0(rid, '0_', nchar(fll));
+  ################################################################################################
+  
+  # Write out the full read sequence
+  fout <- sub('-subread.fasta$', '-fullread.fasta', fsub);
+  writeLines(c(hdr, fll), fout);
+  
+  ################################################################################################
+  ## Trim full read to segments
+  stt <- seq(0, nchar(fll), step);
+  seg <- sapply(stt, function(s) substr(fll, s+1, s+size));
+  names(seg) <- paste0(rid, stt, '_', stt+nchar(seg));
+  seg <- seg[nchar(seg)==size & !grepl('NNN', seg)];
+  # rev <- as.character(reverseComplement(DNAStringSet(seg)));
+  if (length(seg) > 0) {
+    lns <- as.vector(rbind(names(seg), seg));
+    writeLines(lns, sub('-subread.fasta$', '-subseq.fasta', fsub));
+    # lns <- as.vector(rbind(names(seg), rev));
+    # writeLines(lns, sub('-subread.fasta$', '-subrev.fasta', fsub));
+  } 
+  
+  invisible(fout);
 };
-##############################################################################

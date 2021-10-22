@@ -1,1 +1,14 @@
-exportPattern("^[[:alpha:]]+")
+import("Biostrings");
+import("IRanges");
+
+export("AssembleFullread");
+#export("ConsensusFromMuscleAlignment"); # Retired
+export("MakeConsensusFromPalindromeMSA");
+export("PalindromeFromSeedAlignment");
+export("ParseAlignment");
+export("SegmentationFromSelfAlignment");
+export("SelectionFromSegmentAlignment");
+export("SplitRevserseAlignment");
+export("SplitSubread");
+export("SummarizeConsensus");
+export("TrimNs");
