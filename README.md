@@ -17,10 +17,8 @@ PAClindrome requires an Unix/Linux-like system the following software tools:
 
 Clone PAClindrome repo using Unix command line: 
 ```
-git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome
-
+git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome #subdirectory "PAClindrome" will be created in current directory
 ```
-A subdirectory called "PAClindrome" will be created within your current directory
 
 Install PAClindrome R package within R:
 ```
@@ -30,7 +28,7 @@ install_github("zhezhangsh/PAClindrome");
 
 Alternatively, install PAClindrome R package using Unix command line:
 ```
-git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome # Skip if the repo has been cloned in your current directory
+git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome # Skip if the repo has been cloned in current directory
 R CMD INSTALL PAClindrome
 ```
 You can either add these programs to your $PATH or specify their full paths at runtime.
