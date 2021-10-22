@@ -77,4 +77,5 @@ The test run takes abour 5 minutes. If consensus sequences are obtained from any
 
 # Step-by-step
 
+PAClindrome runs in 3 steps. Step 1 and 3 process all reads together and are relatively quick. Step 2 processes reads one by one in sequence, which will take hundreds of CPU hours for a full SMRT library. To process thousands of full reads or more, we strong recommend to run Step 2 in parallel, using a computer cluster or a standalone server with many CPUs. The 3 steps need to be run one by one if this is the case. Running templates for all steps are available in the [example](example) subdirectory. 
 
