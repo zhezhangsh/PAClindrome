@@ -67,7 +67,11 @@ Now, we are ready to go:
 sh run-palindrome-template.sh 
 ```
 
-The test run takes abour 5 minutes. Result files will be written to the $output directory if it gets a consensus sequence from any reads.
+The test run takes abour 5 minutes. If consensus sequences are obtained from any full reads, result files will be written to the $output directory:
 
-  - 
+  - ***smrt.list***: list of SMRT cell names
+  - ***fullread.list*** list of full read names
+  - ***subread.list*** list of subread names
+  - ***consensus-sequence.fasta*** all consensus sequences in one file
+  - ***consensus-summary.txt*** summary of the consensus sequences, described [here](summary.md)
 
