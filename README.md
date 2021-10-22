@@ -11,12 +11,22 @@ PAClindrome requires an Unix/Linux-like system the following software tools:
   - [BLASR](https://github.com/PacificBiosciences/blasr)
   - [Ssamtools 1.3.1 or higher](http://www.htslib.org)
   - [MUSCLE 3.8.1](https://www.drive5.com/muscle)
-  - [PAClindrome R package](https://github.com/zhezhangsh/PAClindrome)
+  - [PAClindrome](https://github.com/zhezhangsh/PAClindrome)
+    - Clone the PAClindrome GitHub repo
+    - Install the PAClindrome R package
 
-```{r}
-# Install PAClindrome
+```
+# Clone PAClindrome repo using Unix command line
+git clone 
+```
+
+```
+#### Install PAClindrome R package
+# Within R
 require(devtools);
 install_github("zhezhangsh/PAClindrome");
+
+# Command line
 ```
 You can either add these programs to your $PATH or specify their full paths at runtime.
 
