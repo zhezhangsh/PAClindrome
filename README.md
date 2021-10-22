@@ -46,7 +46,7 @@ R CMD INSTALL PAClindrome
 
 The only input to PAClindrome is a .fasta file of PacBio subreads from one or multiple full reads. Format of subread name must follow the PacBio convention ***{movieName}/{holeNumber}/{qStart}_{qEnd}***, such as ***m54215_191216_174243/4260227/0_12388***. An example of the input file can be found at [example/subread-ex.fasta](example/subread-ex.fasta) 
 
-To test PAClindrome, locate and edit the [example/run-palindrome-template.sh](example/run-palindrome-template.sh) to specify input file, output directory, locations where the required programs were installed.
+To test PAClindrome, locate and edit the [example/run-palindrome-template.sh](example/run-palindrome-template.sh) file to specify input data, output directory, and locations where the required programs were installed.
 
 ```
 # Lines to edit in the example/run-palindrome-template.sh template file
@@ -92,6 +92,22 @@ This is a simple step that splits all subreads in the input fasta file into indi
   - one fasta file per full read, saved in its own subdirectory
   - $output/fullread.list: full list of paths to the individual fasta file
 
-To run Step 1, locate and edit the [example/run-palindrome-template.sh](example/run-palindrome-template.sh) to specify input file, output directory, locations where the required programs were installed.
+Before running Step 1, locate and edit the [example/1-split-read-template.sh](example/1-split-read-template.sh) file. 
+
+```
+# Lines to edit in the template file
+paclindrome=[path-to-paclindrome-local clone]
+
+r=[path-to-Rscript]
+
+subread=[path-to-input-file]
+output=[path-to-output-directory]
+```
+
+To run Step 1:
+```
+sh 1-split-read-template.sh
+```
+
 
 
