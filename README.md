@@ -75,3 +75,6 @@ The test run takes abour 5 minutes. If consensus sequences are obtained from any
   - ***consensus-sequence.fasta***: all consensus sequences in one file
   - ***consensus-summary.txt***: summary of the consensus sequences as described [here](doc/summary.md)
 
+# Step-by-step
+
+
