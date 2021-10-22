@@ -15,19 +15,26 @@ PAClindrome requires an Unix/Linux-like system the following software tools:
     - Clone the PAClindrome GitHub repo
     - Install the PAClindrome R package
 
+Clone PAClindrome repo using Unix command line: 
 ```
-# Clone PAClindrome repo using Unix command line
-git clone 
-```
+git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome
 
 ```
-#### Install PAClindrome R package
-# Within R
+A subdirectory called "PAClindrome" will be created within your current directory
+
+Install PAClindrome R package within R:
+```
 require(devtools);
 install_github("zhezhangsh/PAClindrome");
+```
 
-# Command line
+Alternatively, install PAClindrome R package using Unix command line:
+```
+git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome # Skip if the repo has been cloned in your current directory
+R CMD INSTALL PAClindrome
 ```
 You can either add these programs to your $PATH or specify their full paths at runtime.
 
 # Quick start
+
+
