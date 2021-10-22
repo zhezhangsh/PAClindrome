@@ -36,4 +36,30 @@ R CMD INSTALL PAClindrome
 
 # Quick start
 
+You can use the demo data and template within the PAClindrome repo to test it on your system. 
+
+  - **Demo data**: $paclindrome/example/subread-ex.fasta
+  - **Template**: $paclindrome/example/run-palindrome-template.sh; where $paclindrome is where you cloned the PAClindrome repo
+
+Edit the following line in ***run-palindrome-template.sh*** according to your local system.
+
+```
+paclindrome=[my-paclindrome-path]
+
+r=[my-path-to-rscript]
+blasr=[my-path-to-blasr]
+muscle=[my-path-to-muscle]
+samtools=[my-path-to-samtools]
+
+subread=$paclindrome/example/subread-ex.fasta # change it if using your own data
+output=$paclindrome/example/output # change it if using other output directory
+```
+
+Now, you are ready to go:
+
+```
+sh run-palindrome-template.sh 
+```
+
+The test run takes abour 5 minutes on most systems. Check results within the output directory once it's done. 
 
