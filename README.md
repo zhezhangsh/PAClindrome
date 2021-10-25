@@ -44,7 +44,7 @@ R CMD INSTALL PAClindrome
 
 # Run the pipeline
 
-PAClindrome takes two input files: a config file and a fasta file of PacBio subreads from one or multiple full reads. Format of subread name (the header line) of the fasta file must follow the PacBio convention ***>{movieName}/{holeNumber}/{qStart}_{qEnd}***, such as ***>m54215_191216_174243/4260227/0_12388***. An example input file can be found at [example/subread-ex.fasta](example/subread-ex.fasta), which can be used as a test input file for the pipeline, and a template config file can be found at [script/config.txt](script/config.txt).
+PAClindrome takes two input files: a config file and a fasta file of PacBio subreads from one or multiple full reads. Format of subread name (the header line) of the fasta file must follow the PacBio convention ***>{movieName}/{holeNumber}/{qStart}_{qEnd}***, such as ***>m54215_191216_174243/4260227/0_12388***. An example input file can be found at [example/subread-ex.fasta](example/subread-ex.fasta), which can be used as a test input file for the pipeline (the output files from this test file are in [example/outputd](example/output)), and a template config file can be found at [script/config.txt](script/config.txt).
 
 First, copy the config file <b>script/config.txt</b> from your cloned repo to a location of your choice (e.g. the directory in which you'll run the pipeline) and edit it to specify the paths of the cloned repo, the fasta file, the directory for output files, and the required programs.  Each path can be absolute or relative to the directory where you'll run the pipeline.
 
