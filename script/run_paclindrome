@@ -1,0 +1,153 @@
+#!/usr/bin/bash
+
+##########################################################################
+#  If no step is specified on commandline, it will run all 3 steps       #
+#  otherwise just run teh specified step (steps: step1 step2 or step3    #
+#  or just skip the specified step if it begin with a dash, e.g. -step2  #
+##########################################################################
+
+config=config.txt
+
+if [ $# -gt 0 ]; then
+    if [[ $1 =~ - ]]; then
+        if [[ $1 = "-h" || $1 = "--help" ]]; then
+            cmd=`echo $0 | sed -e 's/.*\///'`
+            echo ""
+            echo "  $cmd - run paclindrome pipeline"
+            echo ""
+            echo "  Usage: $cmd [-h/--help] [--config=<file>] [step1] [step2] [step3]"
+            echo ""
+            echo "   -h, --help: display this message"
+            echo ""
+            echo "   --config=<file>: specify the config file (default $config in cwd)"
+            echo ""
+            echo "   step1,step2,step3: specify the step[s] to run (default run all three steps)"
+            echo ""
+            exit 1
+
+        elif [[ $1 =~ --config= ]]; then
+            config=`echo $1 | sed -e 's/.*=//'`
+            shift
+        else
+            opt=`echo $1 | sed -e 's/=.*//'`
+     
+            echo ""
+            echo "  option $opt not valid. use -h for help"
+            echo ""
+            exit 1
+        fi
+    fi
+fi
+
+if [ $# -gt 0 ]; then
+    for arg in $*
+    do
+        # echo $arg
+        if [ $arg = 'step1' ]; then
+            step1=1
+        elif [ $arg = 'step2' ]; then
+            step2=1
+        elif [ $arg = 'step3' ]; then
+            step3=1
+        else
+            echo ""
+            echo "  $arg not valid step"
+            echo ""
+            echo "  use -h for help"
+            echo ""
+            exit 1
+        fi
+    done
+else
+    step1=1
+    step2=1
+    step3=1
+fi
+
+##########################################################################
+#     !!!!! You should have no need to change the lines below !!!!       #
+##########################################################################
+
+if [ -z ${config} ]; then
+    echo ""
+    echo " config is not set or is empty!"
+    echo ""
+    exit 1
+fi
+
+if [ ! -s ${config} ]; then
+    echo ""
+    echo " file $config doesn't exist or is empty!"
+    echo ""
+    exit 1
+fi
+
+export config=`readlink -f $config`
+
+source $config
+
+if [ -z ${paclindrome} ]; then
+    echo ""
+    echo " paclindrome is not set or is empty!"
+    echo ""
+    exit 1
+fi
+
+if [ ! -d $paclindrome ]; then
+    echo ""
+    echo " $paclindrome doesn't exist or is not a directory!"
+    echo ""
+    exit 1
+fi
+
+export paclindrome=`readlink -f $paclindrome`
+
+if [ ! -s $paclindrome ]; then
+    echo ""
+    echo " $paclindrome is empty!"
+    echo ""
+    exit 1
+fi
+
+vars=(r blasr muscle samtools subread output)
+for v in ${vars[@]}
+do
+    n=`echo ${!v}`
+    if [ -z ${n} ]; then
+        echo ""
+        echo "  $v is not set or is empty"
+        echo ""
+        exit 1
+    fi
+done
+
+if [ ! -s $subread ]; then
+    echo ""
+    echo "  $subread doesn't exist or is empty!" 
+    echo ""
+    exit 1
+fi
+
+######################################################################
+# Step 1: split subreads into individual fasta files per full read   #
+######################################################################
+
+if [ ! -z ${step1} ]; then
+    sh $paclindrome/script/step1.sh
+fi
+
+######################################################################
+# Step 2: processing reads one by one                                #
+######################################################################
+
+if [ ! -z ${step2} ]; then
+    sh $paclindrome/script/step2.sh
+fi
+
+######################################################################
+# Step 3: collect and summarize consensus sequences                  #
+######################################################################
+
+if [ ! -z ${step3} ]; then
+    sh $paclindrome/script/step3.sh
+fi
