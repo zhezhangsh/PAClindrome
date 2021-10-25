@@ -6,7 +6,7 @@
 #  or just skip the specified step if it begin with a dash, e.g. -step2  #
 ##########################################################################
 
-config=config.sh
+config=config.txt
 
 if [ $# -gt 0 ]; then
     if [[ $1 =~ - ]]; then
