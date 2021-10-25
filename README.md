@@ -44,9 +44,9 @@ R CMD INSTALL PAClindrome
 
 # Run the pipeline
 
-The only input to PAClindrome is a fasta file of PacBio subreads from one or multiple full reads. Format of subread name (the header line) must follow the PacBio convention ***>{movieName}/{holeNumber}/{qStart}_{qEnd}***, such as ***>m54215_191216_174243/4260227/0_12388***. An example input file can be found at [example/subread-ex.fasta](example/subread-ex.fasta), which can be used as a test input file for the pipeline. 
+PAClindrome takes two input files: a config file and a fasta file of PacBio subreads from one or multiple full reads. Format of subread name (the header line) of the fasta file must follow the PacBio convention ***>{movieName}/{holeNumber}/{qStart}_{qEnd}***, such as ***>m54215_191216_174243/4260227/0_12388***. An example input file can be found at [example/subread-ex.fasta](example/subread-ex.fasta), which can be used as a test input file for the pipeline, and a template config file can be found at [script/config.txt](script/config.txt).
 
-First, copy the config file [script/config.txt](script/config.txt) to a location of your choice and edit it to specify the paths of the cloned repo, the fasta file, the directory for output files, and the required programs.
+First, copy the config file <b>script/config.txt</b> from your cloned repo to a location of your choice (e.g. the directory in which you'll run the pipeline) and edit it to specify the paths of the cloned repo, the fasta file, the directory for output files, and the required programs.  Each path can be absolute or relative to the directory where you'll run the pipeline.
 
 ```
 # Lines to edit in the config file
@@ -63,7 +63,7 @@ output=[path-to-output-directory]
 
 Second, copy the script [script/run_paclindrome](script/run_paclindrome) to a directory in your path (or you can just make a symlink to the script).
 
-Now, you are ready to go (assume the config file is in the current directory witht the default name *config.txt*):
+Now, you are ready to go (assume the config file is in the current directory witht the default name <b>config.txt</b>):
 
 ```
  $ run_paclindrome
@@ -87,7 +87,6 @@ Below is the usage of the script.
 
 ```
 
-
 The run on the test intput file takes abour 5 minutes. If consensus sequences are obtained from any full reads, result files will be written to the output directory:
 
   - ***smrt.list***: list of SMRT cell names
@@ -98,19 +97,23 @@ The run on the test intput file takes abour 5 minutes. If consensus sequences ar
 
 # Step-by-step
 
-PAClindrome runs in 3 steps. Step 1 and 3 process all reads together and are relatively quick. Step 2 processes reads one by one in sequence, which will take hundreds of CPU hours for a full SMRT library. To process thousands of full reads or more, we strong recommend to run Step 2 in parallel, using a computer cluster or a standalone server with many CPUs. The 3 steps need to be run one by one if this is the case.
+PAClindrome runs in 3 steps. Step 1 and 3 process all reads together and are relatively quick. Step 2 processes reads one by one in order, which will take hundreds of CPU hours for a full SMRT library. To process thousands of full reads or more, we strongly recommend to run Step 2 in parallel, using a computer cluster or a standalone server with many CPUs. The 3 steps need to be run one by one if this is the case.
 
-## Step 1 split reads
-
-This is a simple step that splits all subreads in the input fasta file into individual files, one per full read. The list of full reads will be written to the $output/fullread.list file to be used by Step 2. 
+## Step 1: split reads
 
 ```
  $ run_paclindrome step1
 ```
 
-## Step 2 identify palindromes and make consensus
+This is a simple step that splits all subreads in the input fasta file into individual files, one per full read. The list of full reads will be written to the output/fullread.list file to be used by Step 2. 
 
-This is the actual step that search for palindromes in each full read and draw consensus from them. It takes the $output/fullread.list file as input to process the reads one by one. We strongly recommend to split this list into multiple files and run them in parallel if the number of reads is more than a thousand. This step heavily relies on ***BLASR*** to identify palindromes and the ***MUSCLE*** algorithm for multiple sequence alignment of the palindromes. MUSCLE is slower, but more accurate than other algorithms, such as ClustalW, based on our evaluation. The following is a synopsis of subroutines involved in this step: 
+## Step 2: identify palindromes and make consensus
+
+```
+ $ run_paclindrome step2
+```
+
+This is the actual step that search for palindromes in each full read and draw consensus from them. It takes the output/fullread.list file as input to process the reads one by one. We strongly recommend to split this list into multiple files and run them in parallel if the number of reads is more than a thousand. This step heavily relies on ***BLASR*** to identify palindromes and the ***MUSCLE*** algorithm for multiple sequence alignment of the palindromes. MUSCLE is slower, but more accurate than other algorithms, such as ClustalW, based on our evaluation. The following is a synopsis of subroutines involved in this step: 
 
   - align all 400-base subsequences of a full read to itself
   - segmentation of the full read based on self-alignment results
@@ -120,17 +123,13 @@ This is the actual step that search for palindromes in each full read and draw c
   - multiple sequence alignment of the palindromes by MUSCLE
   - survey the alignment base by base to obtain a consensus, based on the wisdom-of-the-crowd principal
 
-```
- $ run_paclindrome step2
-```
-
 ## Step 3 collect and summarize consensus sequences
-
-This is also a simple step that collects all consensus sequences generated by Step 2, summarizes them and writes all of them to a single fasta file.
 
 ```
  $ run_paclindrome step3
 ```
+
+This is also a simple step that collects all consensus sequences generated by Step 2, summarizes them and writes all of them to a single fasta file.
 
 
 ---
