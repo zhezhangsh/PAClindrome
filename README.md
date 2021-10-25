@@ -42,14 +42,14 @@ git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome # Skip if th
 R CMD INSTALL PAClindrome
 ```
 
-# Quick start
+# Run the pipeline
 
-The only input to PAClindrome is a .fasta file of PacBio subreads from one or multiple full reads. Format of subread name must follow the PacBio convention ***{movieName}/{holeNumber}/{qStart}_{qEnd}***, such as ***m54215_191216_174243/4260227/0_12388***. An example of the input file can be found at [example/subread-ex.fasta](example/subread-ex.fasta) 
+The only input to PAClindrome is a fasta file of PacBio subreads from one or multiple full reads. Format of subread name (the header line) must follow the PacBio convention ***>{movieName}/{holeNumber}/{qStart}_{qEnd}***, such as ***>m54215_191216_174243/4260227/0_12388***. An example input file can be found at [example/subread-ex.fasta](example/subread-ex.fasta), which can be used as a test input file for the pipeline. 
 
-To test PAClindrome, locate and edit the [example/run-palindrome-template.sh](example/run-palindrome-template.sh) file to specify input data, output directory, and locations where the required programs were installed.
+First, copy the config file [script/config.txt](script/config.txt) to a location of your choice and edit it to specify the paths of the cloned repo, the fasta file, the directory for output files, and the required programs.
 
 ```
-# Lines to edit in the example/run-palindrome-template.sh template file
+# Lines to edit in the config file
 paclindrome=[path-to-paclindrome-local clone]
 
 r=[path-to-Rscript]
@@ -57,17 +57,38 @@ blasr=[path-to-blasr]
 muscle=[path-to-muscle]
 samtools=[path-to-samtools]
 
-subread=$paclindrome/example/subread-ex.fasta # $paclindrome is where PAClindrome was cloned to locally
+subread=[path-to-subread-fasta-file]
 output=[path-to-output-directory]
 ```
 
-Now, we are ready to go:
+Second, copy the script [script/run_paclindrome](script/run_paclindrome) to a directory in your path (or you can just make a symlink to the script).
+
+Now, you are ready to go (assume the config file is in the current directory witht the default name *config.txt*):
 
 ```
-sh run-palindrome-template.sh 
+ $ run_paclindrome
+
 ```
 
-The test run takes abour 5 minutes. If consensus sequences are obtained from any full reads, result files will be written to the $output directory:
+Below is the usage of the script.
+
+```
+ $ run_paclindrome -h
+
+  run_paclindrome - run paclindrome pipeline
+
+  Usage: run_paclindrome [-h/--help] [--config=<file>] [step1] [step2] [step3]
+
+   -h, --help: display this message
+
+   --config=<file>: specify the config file (default config.txt in cwd)
+
+   step1,step2,step3: specify the step[s] to run (default run all three steps)
+
+```
+
+
+The run on the test intput file takes abour 5 minutes. If consensus sequences are obtained from any full reads, result files will be written to the output directory:
 
   - ***smrt.list***: list of SMRT cell names
   - ***fullread.list***: list of full read names
@@ -77,36 +98,14 @@ The test run takes abour 5 minutes. If consensus sequences are obtained from any
 
 # Step-by-step
 
-PAClindrome runs in 3 steps. Step 1 and 3 process all reads together and are relatively quick. Step 2 processes reads one by one in sequence, which will take hundreds of CPU hours for a full SMRT library. To process thousands of full reads or more, we strong recommend to run Step 2 in parallel, using a computer cluster or a standalone server with many CPUs. The 3 steps need to be run one by one if this is the case. Running templates for all steps are available in the [example](example) subdirectory. 
+PAClindrome runs in 3 steps. Step 1 and 3 process all reads together and are relatively quick. Step 2 processes reads one by one in sequence, which will take hundreds of CPU hours for a full SMRT library. To process thousands of full reads or more, we strong recommend to run Step 2 in parallel, using a computer cluster or a standalone server with many CPUs. The 3 steps need to be run one by one if this is the case.
 
 ## Step 1 split reads
 
-This is a simple step that splits all subreads in the input fasta file into individual files, one per full read. The list of full reads will be written to the $output/fullread.list file to be used by Step 1. 
-
-**Input**:
-
-  - all subreads in one fasta file
-
-**Output**:
-  
-  - one fasta file per full read, saved in its own subdirectory
-  - $output/fullread.list: full list of paths to the individual fasta file ([example](example/output/fullread.list))
-
-Before running Step 1, locate and edit the [example/1-split-read-template.sh](example/1-split-read-template.sh) template file. 
+This is a simple step that splits all subreads in the input fasta file into individual files, one per full read. The list of full reads will be written to the $output/fullread.list file to be used by Step 2. 
 
 ```
-# Lines to edit in the template file
-paclindrome=[path-to-paclindrome-local clone]
-
-r=[path-to-Rscript]
-
-subread=[path-to-input-file]
-output=[path-to-output-directory]
-```
-
-To run Step 1:
-```
-sh 1-split-read-template.sh
+ $ run_paclindrome step1
 ```
 
 ## Step 2 identify palindromes and make consensus
@@ -121,64 +120,16 @@ This is the actual step that search for palindromes in each full read and draw c
   - multiple sequence alignment of the palindromes by MUSCLE
   - survey the alignment base by base to obtain a consensus, based on the wisdom-of-the-crowd principal
 
-**Input**:
-
-  - $output/fullread.list: list of all full reads generated by the last step ([example](example/output/fullread.list))
-
-
-**Output**:
-  
-  - a bunch of intermediate files within the subdirectory of each full read 
-  - [readid]-consensus.fasta: consensus sequence of one full read (only if palindromes were found in a read and their consensus is attainable) 
-
-
-Before running Step 2, locate and edit the [example/2-generate-consensus-template.sh](example/2-generate-consensus-template.sh) template file. 
-
 ```
-# Lines to edit in the template file
-paclindrome=[path-to-paclindrome-local clone]
-
-r=[path-to-Rscript]
-blasr=[path-to-blasr]
-muscle=[path-to-muscle]
-samtools=[path-to-samtools]
-
-output=[path-to-output-directory] # $output/fullread.list must exist
-```
-
-To run Step 2:
-```
-sh 2-generate-consensus-template.sh
+ $ run_paclindrome step2
 ```
 
 ## Step 3 collect and summarize consensus sequences
 
 This is also a simple step that collects all consensus sequences generated by Step 2, summarizes them and writes all of them to a single fasta file.
 
-**Input**:
-
-  - one or more fasta files, each contains the consensus sequence from a single read.
-
-**Output**:
-  
-  - $output/consensus-sequence.fasta: all consensus sequences in one fasta file. ([example](example/output/consensus-sequence.fasta))
-  - $output/consensus-sequence.fasta: summary of consensus sequences. See details [here](doc/summary.md). ([example](example/output/consensus-summary.txt))
-
-
-Before running Step 3, locate and edit the [example/3-summarize-consensus-template.sh](example/3-summarize-consensus-template.sh) template file. 
-
 ```
-# Lines to edit in the template file
-paclindrome=[path-to-paclindrome-local clone]
-
-r=[path-to-Rscript]
-
-output=[path-to-output-directory]
-```
-
-To run Step 3:
-```
-sh 3-summarize-consensus-template.sh
+ $ run_paclindrome step3
 ```
 
 
