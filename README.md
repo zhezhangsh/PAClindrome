@@ -63,7 +63,7 @@ output=[path-to-output-directory]
 
 Second, copy the script [script/run_paclindrome](script/run_paclindrome) to a directory in your path (or you can just make a symlink to the script).
 
-Now, you are ready to go (assume the config file is in the current directory witht the default name <b>config.txt</b>):
+Now, you are ready to go (assume the config file is in the current directory with the default name <b>config.txt</b>):
 
 ```
  $ run_paclindrome
