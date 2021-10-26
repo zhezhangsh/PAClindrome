@@ -123,7 +123,7 @@ This is the actual step that search for palindromes in each full read and draw c
   - multiple sequence alignment of the palindromes by MUSCLE
   - survey the alignment base by base to obtain a consensus, based on the wisdom-of-the-crowd principal
 
-## Step 3 collect and summarize consensus sequences
+## Step 3: collect and summarize consensus sequences
 
 ```
  $ run_paclindrome step3
