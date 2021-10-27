@@ -23,7 +23,7 @@ PAClindrome requires the following software tools running on an Unix/Linux-like 
 
 You can either export locations of these programs to PATH or specify them at runtime.
 
-**Install PAClindrome:** 
+# Install PAClindrome 
 
 ```
 # Clone PAClindrome repo using Unix command line: 
