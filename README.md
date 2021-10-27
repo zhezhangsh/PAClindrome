@@ -26,20 +26,21 @@ You can either export locations of these programs to PATH or specify them at run
 # Install PAClindrome 
 
 ```
-# Clone PAClindrome repo using Unix command line: 
-git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome #subdirectory "PAClindrome" will be created in current directory
+# Clone PAClindrome repo using Unix command lines
+# Note the dollor sign($) is the shell prompt, not a part of the command
+ $ git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome #subdirectory "PAClindrome" will be created in current directory
 ```
 
 ```
-# Install PAClindrome R package within R:
-require(devtools);
-install_github("zhezhangsh/PAClindrome");
+# Install PAClindrome R package within R
+> require(devtools);
+> install_github("zhezhangsh/PAClindrome");
 ```
 
 ```
-# Alternatively, install PAClindrome R package using Unix command line:
-git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome # Skip if the repo has been cloned in current directory
-R CMD INSTALL PAClindrome
+# Alternatively, install PAClindrome R package using Unix command line
+ $ git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome # Skip if the repo has been cloned in current directory
+ $ R CMD INSTALL PAClindrome
 ```
 
 After you have cloned the repo, make sure to add the path to the directory script of the cloned repo in your PATH. For example, if you run the above git clone command in the directory /data/packages, run the following command (assume your shell is bash or equivalent):
