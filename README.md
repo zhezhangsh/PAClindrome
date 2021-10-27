@@ -21,9 +21,9 @@ PAClindrome requires the following software tools running on an Unix/Linux-like 
     - Clone the PAClindrome GitHub repo
     - Install the PAClindrome R package
 
-You can either export locations of these programs to $PATH or specify them at runtime.
+You can either export locations of these programs to PATH or specify them at runtime.
 
-**To install PAClindrome:** 
+**Install PAClindrome:** 
 
 ```
 # Clone PAClindrome repo using Unix command line: 
@@ -42,11 +42,19 @@ git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome # Skip if th
 R CMD INSTALL PAClindrome
 ```
 
+After you have cloned the repo, make sure to add the path to the directory script of the cloned repo in your PATH. For example, if you run the above git clone command in the directory /data/packages, run the following command (assume your shell is bash or equivalent):
+
+```
+ $ export PATH=$PATH:/data/packages/PAClindrome/script
+```
+
+You also need to add the above command in your account config file such as ~/.bashrc or ~/.bash_profile so you don't need to run the command above again when you login next time.  If you install the package for all users on your computer, you may add the above command in a system wide config file such as /etc/bashrc or /etc/profile so other users don't need to run the above command themselves. Or you can copy the script file [script/run_paclindrome](script/run_paclindrome) to a location that's in every user's PATH, such as /usr/local/bin.
+
 # Run the pipeline
 
 PAClindrome takes two input files: a config file and a fasta file of PacBio subreads from one or multiple full reads. Format of subread name (the header line) of the fasta file must follow the PacBio convention ***>{movieName}/{holeNumber}/{qStart}_{qEnd}***, such as ***>m54215_191216_174243/4260227/0_12388***. An example input file can be found at [example/subread-ex.fasta](example/subread-ex.fasta), which can be used as a test input file for the pipeline (the output files from this test file are in [example/output](example/output)), and a template config file can be found at [script/config.txt](script/config.txt).
 
-First, copy the config file <b>script/config.txt</b> from your cloned repo to a location of your choice (e.g. the directory in which you'll run the pipeline) and edit it to specify the paths of the cloned repo, the fasta file, the directory for output files, and the required programs.  Each path can be absolute or relative to the directory where you'll run the pipeline. The output directory will be created if it doesn't exist.
+Before you run the pipeline,  copy the config file <b>script/config.txt</b> from your cloned repo to a location of your choice (e.g. the directory in which you'll run the pipeline) and edit it to specify the paths of the cloned repo, the fasta file, the directory for output files, and the required programs.  Each path can be absolute or relative to the directory where you'll run the pipeline. The output directory will be created if it doesn't exist.
 
 ```
 # Lines to edit in the config file
@@ -61,14 +69,14 @@ subread=[path-to-subread-fasta-file]
 output=[path-to-output-directory]
 ```
 
-Second, copy the script [script/run_paclindrome](script/run_paclindrome) to a directory in your path (or you can just make a symlink to the script).
-
 Now, you are ready to go (assume the config file is in the current directory with the default name <b>config.txt</b>):
 
 ```
  $ run_paclindrome
 
 ```
+
+If you get error saying command not found, check if the location of the script has been added in your PATH as described in the pipeline installtion section above.
 
 Below is the usage of the script.
 
