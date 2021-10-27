@@ -27,18 +27,21 @@ You can either export locations of these programs to PATH or specify them at run
 
 ```
 # Clone PAClindrome repo using Unix command lines
-# Note the dollor sign($) is the shell prompt, not a part of the command
+# Note the dollor sign($) means the shell prompt, not a part of the command
+
  $ git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome #subdirectory "PAClindrome" will be created in current directory
 ```
 
 ```
 # Install PAClindrome R package within R
+
 > require(devtools);
 > install_github("zhezhangsh/PAClindrome");
 ```
 
 ```
 # Alternatively, install PAClindrome R package using Unix command line
+
  $ git clone https://github.com/zhezhangsh/PAClindrome.git PAClindrome # Skip if the repo has been cloned in current directory
  $ R CMD INSTALL PAClindrome
 ```
