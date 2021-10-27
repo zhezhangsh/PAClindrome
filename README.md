@@ -48,7 +48,7 @@ After you have cloned the repo, make sure to add the path to the directory scrip
  $ export PATH=$PATH:/data/packages/PAClindrome/script
 ```
 
-You also need to add the above command in your account config file such as ~/.bashrc or ~/.bash_profile so you don't need to run the command above again when you login next time.  If you install the package for all users on your computer, you may add the above command in a system wide config file such as /etc/bashrc or /etc/profile so other users don't need to run the above command themselves. Or you can copy the script file [script/run_paclindrome](script/run_paclindrome) to a location that's in every user's PATH, such as /usr/local/bin.
+You also need to add the above command in your account config file such as ~/.bashrc or ~/.bash_profile so you don't need to run it again next time you login.  If you install the pipeline for all users on your computer, you may add the above command in a system wide config file such as /etc/bashrc or /etc/profile so other users don't need to run the above command themselves. Or you can copy the script file [script/run_paclindrome](script/run_paclindrome) to a location that's in every user's PATH, such as /usr/local/bin.
 
 # Run the pipeline
 
