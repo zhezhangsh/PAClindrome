@@ -9,6 +9,10 @@ Palindromic repeats commonly exist in PacBio WGA (Whole Genome Amplification) da
  
  ***PAClindrome*** is a software package aimed to identify palindromes from the PacBio long reads and use them to draw consensus sequences with >99% accuracy. 
 
+# Citation
+
+[Accurate long-read sequencing allows assembly of the duplicated RHD and RHCE genes harboring variants relevant to blood transfusion](https://www.sciencedirect.com/science/article/pii/S0002929721004584)
+
 # Software requirements
 
 PAClindrome requires the following software tools running on an Unix/Linux-like system:
